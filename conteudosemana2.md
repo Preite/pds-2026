@@ -41,38 +41,60 @@ Liste os atores que interagem diretamente com o sistema.
 
 **Atores:**
 
-1. __________________________________
-2. __________________________________
+1. _Alunos_________________________________
+2. _Bibliotecario_________________________________
 3. __________________________________
 
 ---
 
 ### 2. Liste os casos de uso
 
-#### Ator: ______________________________
+#### Ator: _Alunos_____________________________
 
-- __________________________________
-- __________________________________
-- __________________________________
+- __Verificar livros________________________________
+- __Diponibilidade do mesmo________________________________
+- __Fazer a reserva________________________________
 - __________________________________
 
-#### Ator: ______________________________
+#### Ator: __Bibliotecario____________________________
 
-- __________________________________
-- __________________________________
-- __________________________________
+- ____Registrar retirada de livro______________________________
+- ____Registrar entrada e saida de livro_____________________________
+- ____Gerencia emprstimos_____________________________
 - __________________________________
 
 ---
 
 ### 3. Diagrama de Casos de Uso
 
-Utilize **PlantUML** para criar o diagrama.
-
-```plantuml
 @startuml
 
-' Seu diagrama aqui
+left to right direction
 
+actor "Aluno" as Aluno
+actor "Bibliotecário" as Bibliotecario
+
+rectangle "Sistema da Biblioteca" {
+
+    usecase "Pesquisar livros" as UC1
+    usecase "Verificar disponibilidade" as UC2
+    usecase "Reservar livro" as UC3
+
+    usecase "Gerenciar empréstimos" as UC4
+    usecase "Registrar retirada" as UC5
+    usecase "Registrar devolução" as UC6
+}
+
+Aluno --> UC1
+Aluno --> UC2
+Aluno --> UC3
+
+Bibliotecario --> UC4
+Bibliotecario --> UC5
+Bibliotecario --> UC6
+
+UC3 ..> UC2 : <<include>>
+UC4 ..> UC5 : <<include>>
+UC4 ..> UC6 : <<include>>
 
 @enduml
