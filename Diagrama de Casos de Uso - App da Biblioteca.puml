@@ -1,0 +1,31 @@
+@startuml
+
+left to right direction
+
+actor "Aluno" as Aluno
+actor "Bibliotecário" as Bibliotecario
+
+rectangle "Sistema da Biblioteca" {
+
+    usecase "Pesquisar livros" as UC1
+    usecase "Verificar disponibilidade" as UC2
+    usecase "Reservar livro" as UC3
+
+    usecase "Gerenciar empréstimos" as UC4
+    usecase "Registrar retirada" as UC5
+    usecase "Registrar devolução" as UC6
+}
+
+Aluno --> UC1
+Aluno --> UC2
+Aluno --> UC3
+
+Bibliotecario --> UC4
+Bibliotecario --> UC5
+Bibliotecario --> UC6
+
+UC3 ..> UC2 : <<include>>
+UC4 ..> UC5 : <<include>>
+UC4 ..> UC6 : <<include>>
+
+@enduml
