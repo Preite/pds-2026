@@ -1,0 +1,13 @@
+sequenceDiagram
+    actor Estudante
+    participant TeladeReserva
+    Estudante->>TeladeReserva: Reservar()
+    participant ControladordeReserva
+    TeladeReserva->>ControladordeReserva:solicitarReserva(Livro)
+    participant Livro
+    ControladordeReserva->>Livro:VerificarDisponibilidade()
+    Livro-->>ControladordeReserva:disponivel:true
+    participant CadastrodeEstudante
+    ControladordeReserva->>CadastrodeEstudante:verificarPendencias(Estudante)
+    CadastrodeEstudante-->>ControladordeReserva:semPendencias:true
+    
