@@ -1,0 +1,62 @@
+---
+config:
+  layout: elk
+---
+classDiagram
+    class Cliente {
+        -cpf: String
+        -nome: String
+        -endereco: String
+        -telefone: String
+        +registrar()
+        +alterarDados()
+    }
+    
+    class Conta {
+        -numero: String
+        -saldo: Float
+        -dataAbertura: Date
+        +depositar(valor: Float)
+        +sacar(valor: Float)
+        +consultarSaldo(): Float
+        +emitirExtrato()
+    }
+    
+    class ContaComum {
+        +sacar(valor: Float): Boolean
+    }
+    
+    class ContaEspecial {
+        -limite: Float
+        +sacar(valor: Float): Boolean
+    }
+    
+    class ContaPoupanca {
+        -taxaJuros: Float
+        +calcularJuros()
+    }
+    
+    class CaixaEletronico {
+        +depositar(conta: Conta, valor: Float)
+        +sacar(conta: Conta, valor: Float)
+        +consultarSaldo(conta: Conta): Float
+        +emitirExtrato(conta: Conta)
+    }
+    
+    class Funcionario {
+        -matricula: String
+        -nome: String
+        -cargo: String
+        +abrirConta(cliente: Cliente, tipoConta: String): Conta
+        +encerrarConta(conta: Conta)
+        +registrarCliente(cliente: Cliente)
+        +alterarCadastro(cliente: Cliente)
+    }
+    
+    Cliente "1" --> "*" Conta: possui
+    Conta <|-- ContaComum: herança
+    Conta <|-- ContaEspecial: herança
+    Conta <|-- ContaPoupanca: herança
+    Funcionario "1" --> "*" Cliente: gerencia
+    Funcionario "1" --> "*" Conta: administra
+    CaixaEletronico "1" --> "*" Conta: acessa
