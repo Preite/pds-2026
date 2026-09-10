@@ -1,0 +1,31 @@
+@startuml
+title Casos de uso - Realizar pix
+start
+:Pré-condições;
+:Acessar área Pix;
+:Informar chave Pix;
+:Enviar chave ao Sistema BACEN;
+if (Chave Pix válida?) then (Sim)
+    :BACEN retorna dados;
+    :Exibir dados do destinatário;
+    :Informar valor do Pix;
+    :Verificar saldo da conta;
+    if( Saldo suficiente?) then (Sim)
+        :Exibir dados da operação;
+        :Cliente Confirma o Pix;
+        :Debitar valor da Conta;
+        :Registrar no extrato;
+        :Gerar comprovante ao cliente;
+        stop
+    Else (Não)
+        :[FE-01] Informar saldo insuficiente;
+        :Não realizar débito;
+        :Não registrar transação;
+        stop
+    endif
+else (Não)
+    :[FE-02] Informar chave Pix inválida;
+    :Não permitir continuar a transferência;
+    stop
+endif
+@enduml

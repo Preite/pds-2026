@@ -1,0 +1,29 @@
+@startuml
+title Diagrama de Sequência - Realizar Pix
+actor Cliente
+participant ":TelaPix" as Tela
+participant ":ControladorPix" as Controlador
+participant ":SistemaBACEN" as BACEN
+participant ":Conta" as Conta
+Cliente -> Tela : informarChave(chavePix)
+Tela -> Controlador : validarChave(chavePix)
+Controlador -> BACEN : validarChave(chavePix)
+BACEN --> Controlador : dadosDestinatario
+Controlador --> Tela : exibirDestinatario(dadosDestinatario)
+Cliente -> Tela : informarValor(valor)
+Tela -> Controlador : realizarPix(valor)
+Controlador -> Conta : verificarSaldo(valor)
+alt Saldo suficiente
+    Conta --> Controlador : saldoAprovado
+    Controlador -> Conta : debitar(valor)
+    Conta --> Controlador : debitoRealizado
+    Controlador -> Conta : registrarTransacao(valor)
+    Conta --> Controlador : transacaoRegistrada
+    Controlador -> Tela : gerarComprovante(valor)
+    Tela --> Cliente : exibirComprovante()
+else Saldo insuficiente
+    Conta --> Controlador : saldoInsuficiente
+    Controlador -> Tela : exibirErro("Saldo insuficiente")
+    Tela --> Cliente : mostrarErro()
+end
+@enduml

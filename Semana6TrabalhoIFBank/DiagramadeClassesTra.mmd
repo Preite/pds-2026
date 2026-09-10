@@ -1,0 +1,38 @@
+---
+config:
+  layout: elk
+---
+classDiagram
+    class Cliente {
+        -cpf: String
+        -nome: String
+        -email: String
+        +autenticar()
+        +consultarSaldo()
+        +realizarPix()
+    }
+    
+    class Conta {
+        -numero: String
+        -saldo: Float
+        -agencia: String
+        +debitar(valor): Float
+        +creditar(valor): Float
+    }
+    
+    class Transacao {
+        -valor:Float
+        -data: Date
+        -tipo: String
+    }
+    
+    class ChavePix {
+        +tipo: String
+        +dataCadastro : Date
+        +valor: Float
+
+    }
+    
+    Cliente "1" --> "1..*" Conta: possui
+    Conta "1" --> "0..*" Transacao : possui
+    Conta "1" --> "0..*" ChavePix : possui
