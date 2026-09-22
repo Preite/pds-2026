@@ -1,21 +1,16 @@
 package GradedIndividualTask.Java;
+
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-
-    // ENUM CATEGORIA
 
     enum Categoria {
         LANCHE,
         BEBIDA,
         DOCE
     }
-
-
-    // ENUM TIPO DE PAGAMENTO
 
     enum TipoPagamento {
         DINHEIRO,
@@ -24,26 +19,20 @@ public class Main {
         CARTAO_DEBITO
     }
 
-
-    // CLASSE PRODUTO
-
     static class Produto {
         private int codigo;
         private String nome;
         private Categoria categoria;
         private double preco;
         private int quantidadeEstoque;
-        private boolean ativo;
 
         public Produto(int codigo, String nome, Categoria categoria,
                        double preco, int quantidadeEstoque) {
-
             this.codigo = codigo;
             this.nome = nome;
             this.categoria = categoria;
             this.preco = preco;
             this.quantidadeEstoque = quantidadeEstoque;
-            this.ativo = true;
         }
 
         public int getCodigo() {
@@ -54,85 +43,32 @@ public class Main {
             return nome;
         }
 
-        public void setNome(String nome) {
-            this.nome = nome;
-        }
-
         public Categoria getCategoria() {
             return categoria;
-        }
-
-        public void setCategoria(Categoria categoria) {
-            this.categoria = categoria;
         }
 
         public double getPreco() {
             return preco;
         }
 
-        public void setPreco(double preco) {
-            this.preco = preco;
-        }
-
         public int getQuantidadeEstoque() {
             return quantidadeEstoque;
         }
 
-        public boolean isAtivo() {
-            return ativo;
-        }
-
-        public void alterarPreco(double novoPreco) {
-            if (novoPreco < 0) {
-                throw new IllegalArgumentException(
-                        "O preço não pode ser negativo."
-                );
-            }
-
-            this.preco = novoPreco;
+        public void setPreco(double preco) {
+            this.preco = preco;
         }
 
         public void atualizarEstoque(int quantidade) {
-            if (quantidadeEstoque + quantidade < 0) {
-                throw new IllegalArgumentException(
-                        "Estoque insuficiente."
-                );
-            }
-
             quantidadeEstoque += quantidade;
         }
-
-        public boolean possuiEstoque(int quantidade) {
-            return ativo && quantidade > 0
-                    && quantidadeEstoque >= quantidade;
-        }
-
-        public void removerDoCardapio() {
-            ativo = false;
-        }
     }
-
-
-    // CLASSE ITEM PEDIDO
 
     static class ItemPedido {
         private Produto produto;
         private int quantidade;
 
         public ItemPedido(Produto produto, int quantidade) {
-
-            if (produto == null) {
-                throw new IllegalArgumentException(
-                        "O produto não pode ser nulo."
-                );
-            }
-
-            if (quantidade <= 0) {
-                throw new IllegalArgumentException(
-                        "A quantidade deve ser maior que zero."
-                );
-            }
-
             this.produto = produto;
             this.quantidade = quantidade;
         }
@@ -145,42 +81,16 @@ public class Main {
             return quantidade;
         }
 
-        public void setQuantidade(int quantidade) {
-            if (quantidade <= 0) {
-                throw new IllegalArgumentException(
-                        "A quantidade deve ser maior que zero."
-                );
-            }
-
-            this.quantidade = quantidade;
-        }
-
         public double calcularSubtotal() {
             return produto.getPreco() * quantidade;
         }
     }
-
-
-    // CLASSE PAGAMENTO
 
     static class Pagamento {
         private TipoPagamento tipo;
         private double valorPago;
 
         public Pagamento(TipoPagamento tipo, double valorPago) {
-
-            if (tipo == null) {
-                throw new IllegalArgumentException(
-                        "Tipo de pagamento inválido."
-                );
-            }
-
-            if (valorPago < 0) {
-                throw new IllegalArgumentException(
-                        "O valor não pode ser negativo."
-                );
-            }
-
             this.tipo = tipo;
             this.valorPago = valorPago;
         }
@@ -193,67 +103,37 @@ public class Main {
             return valorPago;
         }
 
-        public void setValorPago(double valorPago) {
-            if (valorPago < 0) {
-                throw new IllegalArgumentException(
-                        "O valor não pode ser negativo."
-                );
-            }
-
-            this.valorPago = valorPago;
+        public boolean pagamentoSuficiente(double total) {
+            return valorPago >= total;
         }
 
-        public boolean pagamentoSuficiente(double valorTotal) {
-            return valorPago >= valorTotal;
-        }
-
-        public double calcularTroco(double valorTotal) {
-            if (!pagamentoSuficiente(valorTotal)) {
-                return 0;
-            }
-
-            return valorPago - valorTotal;
+        public double calcularTroco(double total) {
+            return valorPago - total;
         }
     }
 
-
-    // CLASSE PEDIDO
-
     static class Pedido {
-
         private List<ItemPedido> itens;
         private Pagamento pagamento;
         private LocalDateTime dataHora;
-        private boolean finalizado;
 
         public Pedido() {
             itens = new ArrayList<>();
             dataHora = LocalDateTime.now();
-            finalizado = false;
         }
 
         public void adicionarItem(ItemPedido item) {
+            if (item.getProduto().getQuantidadeEstoque()
+                    >= item.getQuantidade()) {
 
-            if (finalizado) {
-                throw new IllegalStateException(
-                        "O pedido já foi finalizado."
-                );
+                itens.add(item);
+
+            } else {
+                System.out.println("Estoque insuficiente.");
             }
-
-            if (!item.getProduto().possuiEstoque(
-                    item.getQuantidade())) {
-
-                throw new IllegalArgumentException(
-                        "Estoque insuficiente para: "
-                                + item.getProduto().getNome()
-                );
-            }
-
-            itens.add(item);
         }
 
         public double calcularTotal() {
-
             double total = 0;
 
             for (ItemPedido item : itens) {
@@ -264,14 +144,39 @@ public class Main {
         }
 
         public void setPagamento(Pagamento pagamento) {
+            this.pagamento = pagamento;
+        }
 
-            if (finalizado) {
-                throw new IllegalStateException(
-                        "O pedido já foi finalizado."
+        public boolean finalizar() {
+
+            double total = calcularTotal();
+
+            if (itens.isEmpty()) {
+                System.out.println("O pedido está vazio.");
+                return false;
+            }
+
+            if (pagamento == null) {
+                System.out.println("Pagamento não informado.");
+                return false;
+            }
+
+            if (!pagamento.pagamentoSuficiente(total)) {
+                System.out.println("Pagamento insuficiente.");
+                return false;
+            }
+
+            for (ItemPedido item : itens) {
+                item.getProduto().atualizarEstoque(
+                        -item.getQuantidade()
                 );
             }
 
-            this.pagamento = pagamento;
+            return true;
+        }
+
+        public List<ItemPedido> getItens() {
+            return itens;
         }
 
         public Pagamento getPagamento() {
@@ -281,69 +186,10 @@ public class Main {
         public LocalDateTime getDataHora() {
             return dataHora;
         }
-
-        public boolean isFinalizado() {
-            return finalizado;
-        }
-
-        public List<ItemPedido> getItens() {
-            return itens;
-        }
-
-        public boolean finalizar() {
-
-            if (itens.isEmpty()) {
-                throw new IllegalStateException(
-                        "O pedido precisa ter pelo menos um item."
-                );
-            }
-
-            if (pagamento == null) {
-                throw new IllegalStateException(
-                        "O pedido precisa ter um pagamento."
-                );
-            }
-
-            double total = calcularTotal();
-
-            if (!pagamento.pagamentoSuficiente(total)) {
-                throw new IllegalStateException(
-                        "Pagamento insuficiente."
-                );
-            }
-
-            // Confere novamente o estoque
-            for (ItemPedido item : itens) {
-
-                if (!item.getProduto().possuiEstoque(
-                        item.getQuantidade())) {
-
-                    throw new IllegalStateException(
-                            "Estoque insuficiente para: "
-                                    + item.getProduto().getNome()
-                    );
-                }
-            }
-
-            // Retira os produtos do estoque
-            for (ItemPedido item : itens) {
-
-                item.getProduto().atualizarEstoque(
-                        -item.getQuantidade()
-                );
-            }
-
-            finalizado = true;
-
-            return true;
-        }
     }
-
-    // MAIN
 
     public static void main(String[] args) {
 
-        // Criando produtos
         Produto coxinha = new Produto(
                 1,
                 "Coxinha",
@@ -360,18 +206,8 @@ public class Main {
                 15
         );
 
-        Produto brigadeiro = new Produto(
-                3,
-                "Brigadeiro",
-                Categoria.DOCE,
-                3.00,
-                10
-        );
-
-        // Criando pedido
         Pedido pedido = new Pedido();
 
-        // Adicionando produtos
         pedido.adicionarItem(
                 new ItemPedido(coxinha, 2)
         );
@@ -380,62 +216,41 @@ public class Main {
                 new ItemPedido(suco, 1)
         );
 
-        // Calculando total
         double total = pedido.calcularTotal();
 
-        // Criando pagamento
         Pagamento pagamento = new Pagamento(
                 TipoPagamento.DINHEIRO,
                 20.00
         );
 
-        // Adicionando pagamento ao pedido
         pedido.setPagamento(pagamento);
 
-        // Finalizando pedido
-        pedido.finalizar();
+        boolean finalizado = pedido.finalizar();
 
-        // =========================
-        // EXIBIÇÃO
-        // =========================
+        System.out.println("================================");
+        System.out.println("       CANTINA ESCOLAR");
+        System.out.println("================================");
 
-        DateTimeFormatter formato =
-                DateTimeFormatter.ofPattern(
-                        "dd/MM/yyyy HH:mm:ss"
-                );
+        System.out.println("Data: " + pedido.getDataHora());
 
-        System.out.println();
-        System.out.println("======================================");
-        System.out.println("          CANTINA ESCOLAR");
-        System.out.println("======================================");
-
-        System.out.println(
-                "Data: "
-                        + pedido.getDataHora().format(formato)
-        );
-
-        System.out.println("--------------------------------------");
+        System.out.println("--------------------------------");
 
         for (ItemPedido item : pedido.getItens()) {
-
-            System.out.printf(
-                    "%d x %s - R$ %.2f%n",
-                    item.getQuantidade(),
-                    item.getProduto().getNome(),
-                    item.calcularSubtotal()
+            System.out.println(
+                    item.getQuantidade()
+                    + "x "
+                    + item.getProduto().getNome()
+                    + " - R$ "
+                    + item.calcularSubtotal()
             );
         }
 
-        System.out.println("--------------------------------------");
+        System.out.println("--------------------------------");
 
-        System.out.printf(
-                "TOTAL: R$ %.2f%n",
-                total
-        );
+        System.out.printf("Total: R$ %.2f%n", total);
 
         System.out.println(
-                "Pagamento: "
-                        + pagamento.getTipo()
+                "Pagamento: " + pagamento.getTipo()
         );
 
         System.out.printf(
@@ -449,29 +264,21 @@ public class Main {
         );
 
         System.out.println(
-                "Status: "
-                        + (pedido.isFinalizado()
-                        ? "FINALIZADO"
-                        : "EM ABERTO")
+                "Pedido finalizado: " + finalizado
         );
 
-        System.out.println("--------------------------------------");
+        System.out.println("--------------------------------");
 
         System.out.println(
-                "Estoque Coxinha: "
-                        + coxinha.getQuantidadeEstoque()
+                "Estoque da Coxinha: "
+                + coxinha.getQuantidadeEstoque()
         );
 
         System.out.println(
-                "Estoque Suco: "
-                        + suco.getQuantidadeEstoque()
+                "Estoque do Suco: "
+                + suco.getQuantidadeEstoque()
         );
 
-        System.out.println(
-                "Estoque Brigadeiro: "
-                        + brigadeiro.getQuantidadeEstoque()
-        );
-
-        System.out.println("======================================");
+        System.out.println("================================");
     }
 }
