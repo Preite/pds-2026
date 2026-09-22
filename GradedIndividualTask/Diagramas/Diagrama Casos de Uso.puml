@@ -1,0 +1,43 @@
+@startuml
+left to right direction
+
+actor Cliente
+actor Atendente
+actor Gerente
+
+rectangle "Sistema da Cantina Escolar" {
+
+    usecase "Consultar cardápio" as UC1
+    usecase "Escolher produtos" as UC2
+    usecase "Informar quantidade" as UC3
+    usecase "Fechar pedido" as UC4
+    usecase "Realizar pagamento" as UC5
+
+    usecase "Registrar venda" as UC6
+    usecase "Receber pagamento" as UC7
+    usecase "Emitir comprovante" as UC8
+
+    usecase "Cadastrar produto" as UC9
+    usecase "Alterar preço" as UC10
+    usecase "Atualizar estoque" as UC11
+    usecase "Remover produto do cardápio" as UC12
+    usecase "Consultar vendas" as UC13
+}
+
+Cliente --> UC1
+Cliente --> UC2
+Cliente --> UC3
+Cliente --> UC4
+Cliente --> UC5
+
+Atendente --> UC6
+Atendente --> UC7
+Atendente --> UC8
+
+Gerente --> UC9
+Gerente --> UC10
+Gerente --> UC11
+Gerente --> UC12
+Gerente --> UC13
+
+@enduml
