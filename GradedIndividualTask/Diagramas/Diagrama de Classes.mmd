@@ -1,0 +1,81 @@
+classDiagram
+
+    class Produto {
+        -int codigo
+        -String nome
+        -Categoria categoria
+        -double preco
+        -int quantidadeEstoque
+        -boolean ativo
+        +Produto(int, String, Categoria, double, int)
+        +getCodigo() int
+        +getNome() String
+        +setNome(String) void
+        +getCategoria() Categoria
+        +setCategoria(Categoria) void
+        +getPreco() double
+        +setPreco(double) void
+        +getQuantidadeEstoque() int
+        +isAtivo() boolean
+        +alterarPreco(double) void
+        +atualizarEstoque(int) void
+        +possuiEstoque(int) boolean
+        +removerDoCardapio() void
+    }
+
+    class ItemPedido {
+        -Produto produto
+        -int quantidade
+        +ItemPedido(Produto, int)
+        +getProduto() Produto
+        +getQuantidade() int
+        +setQuantidade(int) void
+        +calcularSubtotal() double
+    }
+
+    class Pedido {
+        -List~ItemPedido~ itens
+        -Pagamento pagamento
+        -LocalDateTime dataHora
+        -boolean finalizado
+        +Pedido()
+        +adicionarItem(ItemPedido) void
+        +calcularTotal() double
+        +setPagamento(Pagamento) void
+        +getPagamento() Pagamento
+        +getDataHora() LocalDateTime
+        +isFinalizado() boolean
+        +finalizar() boolean
+    }
+
+    class Pagamento {
+        -TipoPagamento tipo
+        -double valorPago
+        +Pagamento(TipoPagamento, double)
+        +getTipo() TipoPagamento
+        +getValorPago() double
+        +setValorPago(double) void
+        +pagamentoSuficiente(double) boolean
+        +calcularTroco(double) double
+    }
+
+    class Categoria {
+        <<enumeration>>
+        LANCHE
+        BEBIDA
+        DOCE
+    }
+
+    class TipoPagamento {
+        <<enumeration>>
+        DINHEIRO
+        PIX
+        CARTAO_CREDITO
+        CARTAO_DEBITO
+    }
+
+    Pedido "1" *-- "1..*" ItemPedido : possui
+    ItemPedido "*" --> "1" Produto : produto
+    Pedido "1" --> "0..1" Pagamento : pagamento
+    Produto --> Categoria
+    Pagamento --> TipoPagamento
