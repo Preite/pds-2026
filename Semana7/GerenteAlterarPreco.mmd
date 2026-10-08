@@ -1,0 +1,25 @@
+sequenceDiagram
+
+participant gerente2 as :Gerente
+    participant telaPreco as :TelaAlterarPreco
+    participant controladorPreco as :ControladorPreco
+    participant produtoPreco as :Produto
+    participant bancoPreco as :BancoDeDados
+
+    gerente2->>telaPreco: 2: selecionarProduto(idProduto)
+    telaPreco->>controladorPreco: 2.1: buscarProduto(idProduto)
+    controladorPreco->>bancoPreco: 2.1.1: consultarProduto(idProduto)
+    bancoPreco-->>controladorPreco: 2.1.2: retornarProduto()
+
+    controladorPreco-->>telaPreco: 2.2: exibirProduto(produto)
+
+    gerente2->>telaPreco: 2.3: informarNovoPreco(novoPreco)
+
+    telaPreco->>controladorPreco: 2.4: alterarPreco(idProduto, novoPreco)
+    controladorPreco->>produtoPreco: 2.4.1: atualizarPreco(novoPreco)
+    controladorPreco->>bancoPreco: 2.4.2: salvarAlteracao(produto)
+    bancoPreco-->>controladorPreco: 2.4.3: alteracaoConfirmada()
+    
+    controladorPreco-->>telaPreco: 2.5: exibirConfirmacao()
+    
+    telaPreco-->>gerente2: 2.6: precoAlterado()

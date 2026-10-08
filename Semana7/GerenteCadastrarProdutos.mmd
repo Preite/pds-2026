@@ -1,0 +1,14 @@
+sequenceDiagram
+
+    participant gerente as :Gerente
+    participant telaProduto as :TelaGerente
+    participant controleProduto as :ControladorProduto
+    participant produto as :Produto
+    participant estoque as :Estoque
+
+    gerente->>telaProduto: 1: cadastrarProduto(dadosProduto)
+    telaProduto->>controleProduto: 1.1: processarCadastro(dadosProduto)
+    controleProduto->>produto:1.1.1: criarProduto(dadosProduto)
+    produto->>telaProduto:1.1.2: produtoCadastro(Informação)
+    controleProduto->>estoque:1.1.3: AdicionarEstoque(produto)
+

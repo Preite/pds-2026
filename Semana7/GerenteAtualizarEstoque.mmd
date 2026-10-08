@@ -1,0 +1,30 @@
+sequenceDiagram
+
+participant gerente3 as :Gerente
+    participant telaEstoque as :TelaEstoque
+    participant controladorEstoque as :ControladorEstoque
+    participant produtoEstoque as :Produto
+    participant estoque as :Estoque
+    participant bancoEstoque as :BancoDeDados
+    gerente3->>telaEstoque: 3: selecionarProduto(idProduto)
+    telaEstoque->>controladorEstoque: 3.1: consultarEstoque(idProduto)
+    controladorEstoque->>estoque: 3.1.1: consultarQuantidade(idProduto)
+    estoque-->>controladorEstoque: 3.1.2: retornarQuantidade()
+
+    controladorEstoque-->>telaEstoque: 3.2: exibirEstoque()
+
+    gerente3->>telaEstoque: 3.3: informarQuantidade(quantidade)
+    
+    telaEstoque->>controladorEstoque: 3.4: adicionarEstoque(quantidade)
+    controladorEstoque->>estoque: 3.4.1: adicionar(quantidade)
+    
+    telaEstoque->>controladorEstoque: 3.5: retirarEstoque(quantidade)
+    
+    estoque->>produtoEstoque: 3.6: atualizarQuantidade()
+    
+    controladorEstoque->>bancoEstoque: 3.7: salvarEstoque()
+    bancoEstoque-->>controladorEstoque: 3.7.1: estoqueAtualizado()
+    
+    controladorEstoque-->>telaEstoque: 3.8: exibirAtualizacao()
+    
+    telaEstoque-->>gerente3: 3.9: estoqueAtualizado()

@@ -1,0 +1,26 @@
+sequenceDiagram
+
+participant gerente4 as :Gerente
+    participant telaVendas as :TelaConsultaVendas
+    participant controladorVendas as :ControladorVendas
+    participant venda as :Venda
+    participant itemVenda as :ItemVenda
+    participant bancoVendas as :BancoDeDados
+    participant relatorio as :RelatorioVendas
+
+    gerente4->>telaVendas: 4: informarPeriodo(dataInicial, dataFinal)
+    
+    telaVendas->>controladorVendas: 4.1: consultarVendas(periodo)
+    controladorVendas->>bancoVendas: 4.1.1: buscarVendas(periodo)
+    bancoVendas-->>controladorVendas: 4.1.2: retornarVendas()
+    controladorVendas->>venda: 4.1.3: obterDados()
+    venda->>itemVenda: 4.1.4: listarItens()
+    itemVenda-->>venda: 4.1.5: retornarItens()
+    venda-->>controladorVendas: 4.1.6: retornarDadosVenda()
+    
+    controladorVendas->>relatorio: 4.2: gerarRelatorio(vendas)
+    relatorio-->>controladorVendas: 4.2.1: relatorioGerado()
+    
+    controladorVendas-->>telaVendas: 4.3: exibirRelatorio(relatorio)
+    
+    telaVendas-->>gerente4: 4.4: apresentarRelatorio()
