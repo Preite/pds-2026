@@ -1,0 +1,10 @@
+
+stateDiagram-v2
+    [*] --> EstadoInicial : offline()
+    EstadoInicial --> Disponível: ficarOnline()
+    Disponível --> ACaminhodoRestaurante : aceitarCorrida()
+    Disponível --> Disponível : recusarCorrida()
+    ACaminhodoRestaurante --> AguardandoPacote: confirmarChegada()
+    AguardandoPacote --> RealizandoEntrega: iniciarRota()
+    RealizandoEntrega --> Disponível: finalizarEntrega()
+    Disponível --> Offline : ficarOffline()
