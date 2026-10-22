@@ -1,10 +1,12 @@
-
 stateDiagram-v2
+    state Entregador{
     [*] --> EstadoInicial : offline()
-    EstadoInicial --> Disponível: ficarOnline()
-    Disponível --> ACaminhodoRestaurante : aceitarCorrida()
-    Disponível --> Disponível : recusarCorrida()
-    ACaminhodoRestaurante --> AguardandoPacote: confirmarChegada()
-    AguardandoPacote --> RealizandoEntrega: iniciarRota()
-    RealizandoEntrega --> Disponível: finalizarEntrega()
-    Disponível --> Offline : ficarOffline()
+    EstadoInicial --> Disponivel : ficarOnline()
+    Disponivel --> ACaminhoDoRestaurante : aceitarCorrida()
+    Disponivel --> Disponivel : recusarCorrida()
+    ACaminhoDoRestaurante --> AguardandoPacote : confirmarChegada()
+    AguardandoPacote --> RealizandoEntrega : iniciarRota()
+    RealizandoEntrega --> Disponivel : finalizarEntrega()
+    Disponivel --> Offline : ficarOffline()
+    Offline --> [*]
+    }
